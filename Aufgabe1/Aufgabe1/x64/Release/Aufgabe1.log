@@ -1,0 +1,8 @@
+﻿  glad.c
+  main.cpp
+C:\Users\Lukas\Documents\Technikum_Studium\EZG\Aufgabe1\Aufgabe1\src\Shader.h(56,40): warning C4101: 'e': unreferenced local variable
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 367 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Aufgabe1.vcxproj -> C:\Users\Lukas\Documents\Technikum_Studium\EZG\Aufgabe1\x64\Release\Aufgabe1.exe
