@@ -159,8 +159,6 @@
     <None Include="src\depthShader.fs" />
     <None Include="src\shader.fs" />
     <None Include="src\shader.vs" />
-    <None Include="src\shaderLightSource.fs" />
-    <None Include="src\shaderLightSource.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -202,7 +202,7 @@ int main()
 	ourShader.setInt("shadowMap", 0);
 
 	// lighting info
-	glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+	glm::vec3 lightPos(20.0f, 100.0f, 120.0f);
 
 	// vars for calculation
 	float t = 0.0f;
@@ -240,9 +240,9 @@ int main()
 		// 1. render depth of scene to texture (from light's perspective)
 		glm::mat4 lightProjection, lightView;
 		glm::mat4 lightSpaceMatrix;
-		float near_plane = -10.0f, far_plane = 20.0f;
-		lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, near_plane, far_plane);
-		lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		float near_plane = 0.1f, far_plane = 200.0f;
+		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		lightView = glm::lookAt(lightPos, glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0, 1.0, 0.0));
 		lightSpaceMatrix = lightProjection * lightView;
 		// render scene from light's point of view
 		depthShader.use();
@@ -251,12 +251,12 @@ int main()
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
+		glCullFace(GL_FRONT);
 		renderScene(depthShader, cubePositions);
+		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		
-
-        // activate shader
+        // render scene second time normally
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		ourShader.use();
@@ -273,12 +273,12 @@ int main()
 		glm::quat lookQuat = glm::squad(lookDirQuaternions[currentPointIndex], lookDirQuaternions[currentPointIndex + 1], helpQuat1, helpQuat2, t);
 
 		// camera/view transformation
-		//glm::mat4 view = glm::lookAt(movePoint, movePoint + lookQuat * initialOrientation, glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 view = glm::lookAt(glm::vec3(2.0f, 4.0f, -5.0f), glm::vec3(0, -1, 2), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 view = glm::lookAt(movePoint, movePoint + lookQuat * initialOrientation, glm::vec3(0.0f, 1.0f, 0.0f));
+		//glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 7.0f, -15.0f), glm::vec3(0, -3, 7), glm::vec3(0.0f, 1.0f, 0.0f));
 		
 		ourShader.setMat4("view", view);
 
-		ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+		ourShader.setVec3("objectColor", 0.2f, 0.5f, 0.31f);
 		ourShader.setVec3("viewPos", glm::vec3(0, 0, 0));
 		//ourShader.setVec3("viewPos", movePoint);
 		ourShader.setVec3("lightPos", lightPos);
@@ -287,18 +287,6 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 
 		renderScene(ourShader, cubePositions);
-
-		// light source
-		/*lightCubeShader.use();
-		lightCubeShader.setMat4("projection", projection);
-		lightCubeShader.setMat4("view", view);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.5f));
-		lightCubeShader.setMat4("model", model);*/
-
-		/*glBindVertexArray(lightCubeVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);*/
 
         // glfw: swap buffers and poll events
         glfwSwapBuffers(window);
@@ -317,7 +305,7 @@ int main()
 void renderScene(const Shader& shader, const glm::vec3 cubePos[])
 {
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, -3.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 	shader.setMat4("model", model);
 	glBindVertexArray(planeVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);

@@ -26,7 +26,6 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     vec3 lightDir = normalize(lightPos - FragPos);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
-    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
     // PCF
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -53,25 +52,12 @@ void main()
     vec3 lightColor = vec3(1.0);
 
     // ambient
-    float ambientStrength = 0.1;
+    float ambientStrength = 0.3;
     vec3 ambient = ambientStrength * lightColor;
-  	
-    // diffuse 
-    //vec3 norm = normalize(Normal);
-    //vec3 lightDir = normalize(lightPos - FragPos);
-    //float diff = max(dot(norm, lightDir), 0.0);
-    //vec3 diffuse = diff * lightColor;
 
     vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * lightColor;
-    
-    // specular
-    //float specularStrength = 0.5;
-    //vec3 viewDir = normalize(viewPos - FragPos);
-    //vec3 reflectDir = reflect(-lightDir, norm);  
-    //float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    //vec3 specular = specularStrength * spec * lightColor;  
 
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
