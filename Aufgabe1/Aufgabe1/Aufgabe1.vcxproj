@@ -155,6 +155,8 @@
     <ClInclude Include="src\Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\depthShader.vs" />
+    <None Include="src\depthShader.fs" />
     <None Include="src\shader.fs" />
     <None Include="src\shader.vs" />
   </ItemGroup>

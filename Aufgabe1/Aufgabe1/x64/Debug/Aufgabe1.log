@@ -1,3 +1,3 @@
 ﻿  main.cpp
-C:\Users\Lukas\Documents\Technikum_Studium\EZG\Aufgabe1\Aufgabe1\src\Shader.h(56,40): warning C4101: 'e': unreferenced local variable
-  Aufgabe1.vcxproj -> C:\Users\Lukas\Documents\Technikum_Studium\EZG\Aufgabe1\x64\Debug\Aufgabe1.exe
+C:\Users\Lukas\Documents\Technikum_Studium\EZG_Git\EZG_Projects\Aufgabe1\Aufgabe1\src\Shader.h(56,40): warning C4101: 'e': unreferenced local variable
+  Aufgabe1.vcxproj -> C:\Users\Lukas\Documents\Technikum_Studium\EZG_Git\EZG_Projects\Aufgabe1\x64\Debug\Aufgabe1.exe

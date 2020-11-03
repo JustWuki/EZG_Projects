@@ -30,5 +30,7 @@
   <ItemGroup>
     <None Include="src\shader.fs" />
     <None Include="src\shader.vs" />
+    <None Include="src\depthShader.fs" />
+    <None Include="src\depthShader.vs" />
   </ItemGroup>
 </Project>
