@@ -191,8 +191,8 @@ int main()
 	glBindVertexArray(0);
 
 	// load textures
-	unsigned int diffuseMap = loadTexture("resource/textures/brickwall.jpg");
-	unsigned int normalMap = loadTexture("resource/textures/brickwall_normal.jpg");
+	unsigned int diffuseMap = loadTexture("src/brickwall.jpg");
+	unsigned int normalMap = loadTexture("src/brickwall_normal.jpg");
 
 	// configure depth map FBO
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
