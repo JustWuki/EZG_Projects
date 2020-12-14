@@ -14,10 +14,12 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm> 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 unsigned int loadTexture(const char* path);
+void restartScene();
 void renderCube();
 void renderScene(const Shader& shader, const glm::vec3 cubePos[]);
 
@@ -36,23 +38,47 @@ const int CAMERPATHLENGTH = 20;
 //increment for T
 float increment = 0.005f;
 float bumpiness = 1.0f;
+int samples = 4;
 
 unsigned int planeVAO;
 
-int main()
+void printUsage() {
+	std::cerr << "Usage: Aufgabe1.exe --samples [sampling mode]" << std::endl;
+}
+
+int main(int argc, char* argv[])
 {
+	for (int i = 1; i < argc; i++) {
+		if (std::string(argv[i]) == "--samples") {
+			if (i + 1 < argc) {
+				if (std::stoi(argv[i + 1]) >= 0) {
+					samples = std::stoi(argv[i + 1]);
+				}
+				else {
+					printUsage();
+					return 1;
+				}
+			}
+			else {
+				printUsage();
+				return 1;
+			}
+		}
+	}
+
     // glfw: initialize and configure
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, samples);
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
     // glfw window creation
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Window", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -76,8 +102,9 @@ int main()
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
 
-    // world space positions cubes
+    // world space positions cubesALso
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f,  0.0f,  0.0f),
 		glm::vec3(0.0f,  2.0f, 3.0f),
@@ -221,7 +248,6 @@ int main()
 	ourShader.setInt("normalMap", 1);
 	ourShader.setInt("shadowMap", 2);
 	
-	
 	// lighting info
 	glm::vec3 lightPos(20.0f, 100.0f, 120.0f);
 
@@ -301,7 +327,8 @@ int main()
 		// camera/view transformation
 		glm::mat4 view = glm::lookAt(movePoint, movePoint + lookQuat * initialOrientation, glm::vec3(0.0f, 1.0f, 0.0f));
 		// wide view test
-		//glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 7.0f, 17.0f), glm::vec3(0, -3, 3), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0, 1, 0), glm::vec3(0.0f, 1.0f, 0.0f));
+		//glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 3.0f, 15.0f), glm::vec3(0, -3, 3), glm::vec3(0.0f, 1.0f, 0.0f));
 		// close up test
 		//glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 2.0f, 4.0f), glm::vec3(0, -5, 3), glm::vec3(0.0f, 1.0f, 0.0f));
 		
@@ -447,6 +474,14 @@ void processInput(GLFWwindow* window)
 		if (bumpiness - 0.1f >= 0)
 			bumpiness -= 0.1f;
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+		glDisable(GL_MULTISAMPLE);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+		glEnable(GL_MULTISAMPLE);
+	}
 }
 
 //  window size
@@ -522,7 +557,7 @@ unsigned int loadTexture(char const* path)
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT); 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
